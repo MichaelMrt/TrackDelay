@@ -1,8 +1,16 @@
 from flask import Flask
 from datetime import datetime
 import time
+import os
 
 time.sleep(10)
+
+def get_host():
+    if os.getenv('REMOTE'):
+        return "194.164.48.116" 
+    else:
+        return "127.0.0.1"
+
 
 app = Flask(__name__)
 
@@ -19,4 +27,4 @@ def hello_world():
         text += "<p>" + i + "</p>"
     return text
 
-app.run(host="127.0.0.1", port="5000")
+app.run(host=get_host(), port="5000")
