@@ -19,4 +19,4 @@ def hello_world():
         text += "<p>" + i + "</p>"
     return text
 
-app.run(host="194.164.48.116", port="5000")
+app.run(host="127.0.0.1", port="5000")
