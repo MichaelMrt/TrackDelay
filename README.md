@@ -1,5 +1,5 @@
 # TrackDelay
-##Eine App, um die Verzögerungen der Deutschen Bahn zu erfassen und auszuwerten. Die Daten sollen auf einer Weboberfläche anschaulich dargestellt werden.
+## Eine App, um die Verzögerungen der Deutschen Bahn zu erfassen und auszuwerten. Die Daten sollen auf einer Weboberfläche anschaulich dargestellt werden.
 
 ## Installation:
 ### Zunächst muss Python installiert werden.
