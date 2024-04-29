@@ -7,6 +7,7 @@ from deutsche_bahn_api.station_helper import StationHelper as StationHelper
 import requests
 from datetime import datetime, timedelta
 import xml.etree.ElementTree as elementTree
+from sqlalchemy import create_engine
 import pandas as pd
 import time
 import logging
@@ -15,7 +16,7 @@ class ApiAuthentication:
     def __init__(self, client_id, client_secret) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
-        self.stationEVA = 8001795
+        self.stationEVA = 8000085
 
     def test_credentials(self) -> bool:
         response = requests.get(
@@ -171,16 +172,15 @@ class ApiAuthentication:
         return train_list
 
 
-df = pd.DataFrame(columns=["Linie", "ID", "Von", "Nach", "Planmäßige Abfahrt", "Aktuelle Abfahrt", "Meldung", "Gleis"])
+df = pd.DataFrame(columns=["Bahnhof", "Linie", "BahnID", "Von", "Nach", "plan_abfahrt", "akt_abfahrt", "Meldung", "Gleis"])
 api = ApiAuthentication("8f67e74b49f0ba8660339bb4cd826e98", "51a8654bf38ac547db6f60360673818d")
 train = api.get_timetable()
 now_init = datetime.now()
 current_time_init = now_init.strftime('%H')
 
-print(train)
-
 def start(first:bool):
     active = True
+    arr_meldung = []
 
     while active:
         try:
@@ -215,22 +215,26 @@ def start(first:bool):
                     log.write(str(logtime) + " keine Züge vorhanden!\n")
                     time.sleep(1800)
                 start(False)
-        
+                
             for i in changes:
-                arr1 = i.passed_stations.split("|")
-                arr2 = i.stations.split("|")
+                try:
+                    arr1 = i.passed_stations.split("|")
+                    arr2 = i.stations.split("|")
 
-                linie = str(i.train_type) + str(i.train_line)
-                id = str(i.train_number)
-                von = arr1[0]
-                nach = arr2[-1]
-                planm_abfahrt = i.departure
-                akt_abfahrt = i.train_changes.departure
-                arr_meldung = i.train_changes.messages
-                gleis = i.platform
-                meldung = ""
-                meldung_check = []
+                    linie = str(i.train_type) + str(i.train_line)
+                    id = str(i.train_number)
+                    von = arr1[0]
+                    nach = arr2[-1]
+                    planm_abfahrt = i.departure
+                    akt_abfahrt = i.train_changes.departure
+                    arr_meldung = i.train_changes.messages
+                    gleis = i.platform
+                    meldung = ""
+                    meldung_check = []
 
+                except AttributeError:
+                    continue
+                
                 if len(arr_meldung) > 0:
                     for msg in arr_meldung:
                         if str(msg.message) not in meldung_check:
@@ -239,41 +243,47 @@ def start(first:bool):
                     meldung = meldung[:-1]
 
                 # Überprüfen, ob die Linie mit der planmäßigen Abfahrt bereits existiert
-                match = df[(df['Linie'] == linie) & (df['Planmäßige Abfahrt'] == planm_abfahrt)]
+                match = df[(df['BahnID'] == id) & (df['plan_abfahrt'] == planm_abfahrt)]
 
                 if match.empty and (akt_abfahrt[0:6] != tomorrow):
                     with open(f"logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                         logtime = now.strftime('%H:%M:%S')
                         log.write(str(logtime) + " Verbindung gefunden: " + str(linie) + " ID: " + id + " nach " + str(nach) + "; Planmaessig um: " + str(planm_abfahrt) + "; aktuell: " + str(akt_abfahrt) + "; Grund: " + str(meldung) + "\n")
-                    df = df._append({"Linie": linie, "ID": id, "Von": von, "Nach": nach, 
-                                "Planmäßige Abfahrt": planm_abfahrt, "Aktuelle Abfahrt": akt_abfahrt,
+                    df = df._append({"Bahnhof": "Duesseldorf", "Linie": linie, "BahnID": id, "Von": von, "Nach": nach, 
+                                "plan_abfahrt": planm_abfahrt, "akt_abfahrt": akt_abfahrt,
                                 "Meldung": meldung, "Gleis": gleis}, ignore_index=True)
                 else:
                     # Aktualisieren der aktuellen Abfahrt, falls notwendig
-                    if df.at[match.index[0], 'Aktuelle Abfahrt'] != akt_abfahrt and akt_abfahrt != None:
-                        df.at[match.index[0], 'Aktuelle Abfahrt'] = akt_abfahrt
+                    if df.at[match.index[0], 'akt_abfahrt'] != akt_abfahrt and akt_abfahrt != None:
+                        df.at[match.index[0], 'akt_abfahrt'] = akt_abfahrt
                         with open(f"logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                             logtime = now.strftime('%H:%M:%S')
                             log.write(str(logtime) + " Neue Abfahrtszeit fuer: " + str(linie) + " ID: " + id + " nach " + str(nach) + "; Planmaessig um: " + str(planm_abfahrt) + "; aktuell: " + str(akt_abfahrt) + "; Grund:" + str(meldung) + "\n")
     
-            if current_time != "23:59":
+            if current_time != "21:58":
                 with open("status.txt", "w") as w:
                     logtime = now.strftime('%H:%M:%S')
                     w.write(f"{logtime} active")
-                time.sleep(10)
+                time.sleep(20)
+            else:
+                active = False
+
+        except AttributeError as aEx:
+            if current_time != "23:58":
+                with open("status.txt", "w") as w:
+                    logtime = now.strftime('%H:%M:%S')
+                    w.write(f"{logtime} active")
+                time.sleep(20)
             else:
                 active = False
 
         except Exception as ex:
-            df.to_parquet(f'parquet/{current_date}.parquet', engine='fastparquet')
-            df.to_excel(f'excel/{current_date}.xlsx')
             with open("status.txt", "w") as w:
                 w.write("PROBLEM\n" + str(logging.exception(str(ex))))
+
+    engine = create_engine('mysql+mysqlconnector://marco:Auto49!@80.158.78.110:3306/track_delay')
     
-    with open("status.txt", "w") as w:
-        logtime = now.strftime('%H:%M:%S')
-        w.write(f"{logtime} waiting for restart")
-    df.to_parquet(f'parquet/{current_date}.parquet', engine='fastparquet')
-    df.to_excel(f'excel/{current_date}.xlsx')
+    df.to_sql('main', con=engine, if_exists='append', index=False)
+    print("*********DATABASE**********")
     
 start(True)
