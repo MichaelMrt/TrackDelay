@@ -16,7 +16,7 @@ class ApiAuthentication:
     def __init__(self, client_id, client_secret) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
-        self.stationEVA = 8000263
+        self.stationEVA = 8000085
 
     def test_credentials(self) -> bool:
         response = requests.get(
@@ -33,7 +33,7 @@ class ApiAuthentication:
                 "DB-Api-Key": self.client_secret,
                 "DB-Client-Id": self.client_id,
             }
-    
+
     def get_timetable_xml(self, hour: [int] = None, date: [datetime] = None) -> str:
         hour_date: datetime = datetime.now()
         if hour:
@@ -56,7 +56,7 @@ class ApiAuthentication:
             raise Exception("Can't request timetable! The request failed with the HTTP status code {}: {}"
                             .format(response.status_code, response.text))
         return response.text
-    
+
     def get_timetable_xml_hour_before(self, hour: [int] = None, date: [datetime] = None) -> str:
         hour_date: datetime = datetime.now()
         hour_date = hour_date - timedelta(hours=1)
@@ -80,7 +80,7 @@ class ApiAuthentication:
             raise Exception("Can't request timetable! The request failed with the HTTP status code {}: {}"
                             .format(response.status_code, response.text))
         return response.text
-    
+
     def get_timetable(self, hour: [int] = None) -> list[Train]:
         train_list: list[Train] = []
         trains = elementTree.fromstringlist(self.get_timetable_xml(hour))
@@ -194,9 +194,9 @@ def start(first:bool):
             current_date = now.strftime('%d_%m_%y')
             now_delta_one_day = now + timedelta(1)
             tomorrow = now_delta_one_day.strftime('%y%m%d')
-    
+
             if current_hour != current_time_init:
-            
+
                 current_time_init = now.strftime('%H')
                 new_train = api.get_timetable()
                 for j in new_train:
@@ -206,16 +206,16 @@ def start(first:bool):
 
             if first:
                 first = False
-                with open(f"muenster_logs/{current_date}log.txt", "w") as init:
+                with open(f"duesseldorf_logs/{current_date}log.txt", "w") as init:
                     init.write("")
-        
+
             if len(train) == 0:
-                with open(f"muenster_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
+                with open(f"duesseldorf_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                     logtime = now.strftime('%H:%M:%S')
                     log.write(str(logtime) + " keine Züge vorhanden!\n")
                     time.sleep(1800)
                 start(False)
-                
+
             for i in changes:
                 try:
                     arr1 = i.passed_stations.split("|")
@@ -234,7 +234,7 @@ def start(first:bool):
 
                 except AttributeError:
                     continue
-                
+
                 if len(arr_meldung) > 0:
                     for msg in arr_meldung:
                         if str(msg.message) not in meldung_check:
@@ -246,22 +246,22 @@ def start(first:bool):
                 match = df[(df['BahnID'] == id) & (df['plan_abfahrt'] == planm_abfahrt)]
 
                 if match.empty and (akt_abfahrt[0:6] != tomorrow):
-                    with open(f"muenster_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
+                    with open(f"duesseldorf_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                         logtime = now.strftime('%H:%M:%S')
                         log.write(str(logtime) + " Verbindung gefunden: " + str(linie) + " ID: " + id + " nach " + str(nach) + "; Planmaessig um: " + str(planm_abfahrt) + "; aktuell: " + str(akt_abfahrt) + "; Grund: " + str(meldung) + "\n")
-                    df = df._append({"Bahnhof": "Muenster", "Linie": linie, "BahnID": id, "Von": von, "Nach": nach, 
+                    df = df._append({"Bahnhof": "Duesseldorf", "Linie": linie, "BahnID": id, "Von": von, "Nach": nach, 
                                 "plan_abfahrt": planm_abfahrt, "akt_abfahrt": akt_abfahrt,
                                 "Meldung": meldung, "Gleis": gleis}, ignore_index=True)
                 else:
                     # Aktualisieren der aktuellen Abfahrt, falls notwendig
                     if df.at[match.index[0], 'akt_abfahrt'] != akt_abfahrt and akt_abfahrt != None:
                         df.at[match.index[0], 'akt_abfahrt'] = akt_abfahrt
-                        with open(f"muenster_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
+                        with open(f"duesseldorf_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                             logtime = now.strftime('%H:%M:%S')
                             log.write(str(logtime) + " Neue Abfahrtszeit fuer: " + str(linie) + " ID: " + id + " nach " + str(nach) + "; Planmaessig um: " + str(planm_abfahrt) + "; aktuell: " + str(akt_abfahrt) + "; Grund:" + str(meldung) + "\n")
-    
-            if current_time != "21:58":
-                with open("muenster_status.txt", "w") as w:
+
+            if current_time != "21:57":
+                with open("duesseldorf_status.txt", "w") as w:
                     logtime = now.strftime('%H:%M:%S')
                     w.write(f"{logtime} active")
                 time.sleep(20)
@@ -269,8 +269,8 @@ def start(first:bool):
                 active = False
 
         except AttributeError as aEx:
-            if current_time != "23:58":
-                with open("muenster_status.txt", "w") as w:
+            if current_time != "23:57":
+                with open("duesseldorf_status.txt", "w") as w:
                     logtime = now.strftime('%H:%M:%S')
                     w.write(f"{logtime} active")
                 time.sleep(20)
@@ -278,12 +278,12 @@ def start(first:bool):
                 active = False
 
         except Exception as ex:
-            with open("muenster_status.txt", "w") as w:
+            with open("duesseldorf_status.txt", "w") as w:
                 w.write("PROBLEM\n" + str(logging.exception(str(ex))))
 
     engine = create_engine('mysql+mysqlconnector://marco:Auto49!@80.158.78.110:3306/track_delay')
-    
+
     df.to_sql('main', con=engine, if_exists='append', index=False)
     print("*********DATABASE**********")
-    
+
 start(True)
