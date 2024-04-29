@@ -16,7 +16,7 @@ class ApiAuthentication:
     def __init__(self, client_id, client_secret) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
-        self.stationEVA = 8000085
+        self.stationEVA = 8000263
 
     def test_credentials(self) -> bool:
         response = requests.get(
@@ -206,11 +206,11 @@ def start(first:bool):
 
             if first:
                 first = False
-                with open(f"logs/{current_date}log.txt", "w") as init:
+                with open(f"muenster_logs/{current_date}log.txt", "w") as init:
                     init.write("")
         
             if len(train) == 0:
-                with open(f"logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
+                with open(f"muenster_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                     logtime = now.strftime('%H:%M:%S')
                     log.write(str(logtime) + " keine Züge vorhanden!\n")
                     time.sleep(1800)
@@ -246,22 +246,22 @@ def start(first:bool):
                 match = df[(df['BahnID'] == id) & (df['plan_abfahrt'] == planm_abfahrt)]
 
                 if match.empty and (akt_abfahrt[0:6] != tomorrow):
-                    with open(f"logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
+                    with open(f"muenster_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                         logtime = now.strftime('%H:%M:%S')
                         log.write(str(logtime) + " Verbindung gefunden: " + str(linie) + " ID: " + id + " nach " + str(nach) + "; Planmaessig um: " + str(planm_abfahrt) + "; aktuell: " + str(akt_abfahrt) + "; Grund: " + str(meldung) + "\n")
-                    df = df._append({"Bahnhof": "Duesseldorf", "Linie": linie, "BahnID": id, "Von": von, "Nach": nach, 
+                    df = df._append({"Bahnhof": "Muenster", "Linie": linie, "BahnID": id, "Von": von, "Nach": nach, 
                                 "plan_abfahrt": planm_abfahrt, "akt_abfahrt": akt_abfahrt,
                                 "Meldung": meldung, "Gleis": gleis}, ignore_index=True)
                 else:
                     # Aktualisieren der aktuellen Abfahrt, falls notwendig
                     if df.at[match.index[0], 'akt_abfahrt'] != akt_abfahrt and akt_abfahrt != None:
                         df.at[match.index[0], 'akt_abfahrt'] = akt_abfahrt
-                        with open(f"logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
+                        with open(f"muenster_logs/{current_date}log.txt", "a", encoding="UTF-8") as log:
                             logtime = now.strftime('%H:%M:%S')
                             log.write(str(logtime) + " Neue Abfahrtszeit fuer: " + str(linie) + " ID: " + id + " nach " + str(nach) + "; Planmaessig um: " + str(planm_abfahrt) + "; aktuell: " + str(akt_abfahrt) + "; Grund:" + str(meldung) + "\n")
     
             if current_time != "21:58":
-                with open("status.txt", "w") as w:
+                with open("muenster_status.txt", "w") as w:
                     logtime = now.strftime('%H:%M:%S')
                     w.write(f"{logtime} active")
                 time.sleep(20)
@@ -270,7 +270,7 @@ def start(first:bool):
 
         except AttributeError as aEx:
             if current_time != "23:58":
-                with open("status.txt", "w") as w:
+                with open("muenster_status.txt", "w") as w:
                     logtime = now.strftime('%H:%M:%S')
                     w.write(f"{logtime} active")
                 time.sleep(20)
@@ -278,7 +278,7 @@ def start(first:bool):
                 active = False
 
         except Exception as ex:
-            with open("status.txt", "w") as w:
+            with open("muenster_status.txt", "w") as w:
                 w.write("PROBLEM\n" + str(logging.exception(str(ex))))
 
     engine = create_engine('mysql+mysqlconnector://marco:Auto49!@80.158.78.110:3306/track_delay')
