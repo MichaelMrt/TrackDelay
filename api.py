@@ -1,5 +1,6 @@
 import deutsche_bahn_api.api_authentication as dba
+import config
 
-api = dba.ApiAuthentication("8f67e74b49f0ba8660339bb4cd826e98", "51a8654bf38ac547db6f60360673818d")
+api = dba.ApiAuthentication(config.CLIENT_ID, config.CLIENT_SECRET)
 success: bool = api.test_credentials()
 print(success)
