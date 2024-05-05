@@ -35,6 +35,7 @@ for train in trains_with_changes:
     current_departure = train.train_changes.departure
     track = train.platform
     messages = train.train_changes.messages
+    station = "Lünen"
     
     string_message =""
     for message_object in messages:
