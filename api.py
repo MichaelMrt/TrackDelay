@@ -13,8 +13,6 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-mycursor.execute("SELECT count(*) FROM main")
-#results = mycursor.fetchall()
 
 api = dba.ApiAuthentication(config.CLIENT_ID, config.CLIENT_SECRET)
 success: bool = api.test_credentials()
@@ -29,7 +27,11 @@ trains_with_changes = timetable_helper.get_timetable_changes(trains_in_this_hour
 for train in trains_with_changes:
     line = str(train.train_type) + str(train.train_line)
     id = str(train.train_number)
-    first_station = train.passed_stations.split("|")[0]
+    if hasattr(train,'passed_stations'):
+     first_station = train.passed_stations.split("|")[0]
+    else:
+       first_station = "error"
+    
     last_station = train.stations.split("|")[-1]
     planned_departure = train.departure
     current_departure = train.train_changes.departure
@@ -42,5 +44,8 @@ for train in trains_with_changes:
         string_message += str(message_object.message)+" | "
 
  #ToDo Add SQL Insert
-
+query ="INSERT INTO test VALUES (DEFAULT,'"+line+"','"+id+"','Dortmund','Münster','2404301708','2404301708','18','Weichenstörung','Lünen')"
+mycursor.execute(query)
+mydb.commit()
 mydb.close()
+print("Success")
