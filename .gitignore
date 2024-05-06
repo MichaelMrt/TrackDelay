@@ -6,3 +6,6 @@ duesseldorf_status.txt
 /muenster_logs
 /parquet
 /excel
+/__pycache__
+__pycache__
+config.py
