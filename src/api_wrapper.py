@@ -43,14 +43,17 @@ class Api_wrapper:
 
         station_helper = deutsche_bahn_api.station_helper.StationHelper()
         found_stations_by_name = station_helper.find_stations_by_name(train_station_name)
-
+        print(found_stations_by_name[0][3]) # Output station
 
         timetable_helper = deutsche_bahn_api.timetable_helper.TimetableHelper(found_stations_by_name[0], api)
         trains_in_this_hour = timetable_helper.get_timetable()
         trains_with_changes = timetable_helper.get_timetable_changes(trains_in_this_hour)
 
         for train in trains_with_changes:
-            line = str(train.train_type) + str(train.train_line)
+            if hasattr(train,'train_line'):
+             line = str(train.train_type) + str(train.train_line)
+            else: line = str(train.train_type)
+
             train_id = str(train.train_number)
 
             # check if train has already passed stations
