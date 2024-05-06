@@ -7,4 +7,5 @@ duesseldorf_status.txt
 /parquet
 /excel
 /__pycache__
+__pycache__
 config.py
