@@ -28,7 +28,7 @@ class Api_wrapper:
         print("train_station: "+train_station)
         
 
-    def __init__(self, train_station_name):
+    def start(self, train_station_name):
         # Connect to Database
         mydb = mysql.connector.connect(
             host=config.DB_HOSTNAME,
@@ -87,4 +87,3 @@ class Api_wrapper:
         mydb.close()
         print("Success--End of script")
 
-Api_wrapper("Lünen")
