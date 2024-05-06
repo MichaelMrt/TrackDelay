@@ -45,9 +45,10 @@ for train in trains_with_changes:
     for message_object in messages:
         string_message += str(message_object.message)+" | "
 
- #ToDo Add SQL Insert
-query ="INSERT INTO test VALUES (DEFAULT,'"+line+"','"+id+"','"+first_station+"','"+last_station+"','"+planned_departure+"','"+current_departure+"','"+track+"','"+string_message+"','Lünen')"
-mycursor.execute(query)
-mydb.commit()
+   #ToDo Add SQL Insert
+    query ="INSERT INTO test VALUES (DEFAULT,'"+line+"','"+id+"','"+first_station+"','"+last_station+"','"+planned_departure+"','"+current_departure+"','"+track+"','"+string_message+"','Lünen')"
+    mycursor.execute(query)
+    mydb.commit()
+
 mydb.close()
 print("Success")
