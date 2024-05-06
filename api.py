@@ -27,10 +27,12 @@ trains_with_changes = timetable_helper.get_timetable_changes(trains_in_this_hour
 for train in trains_with_changes:
     line = str(train.train_type) + str(train.train_line)
     id = str(train.train_number)
+
+    # check if train has already passed stations
     if hasattr(train,'passed_stations'):
      first_station = train.passed_stations.split("|")[0]
     else:
-       first_station = "error"
+       first_station = train.stations.split("|")[0]
     
     last_station = train.stations.split("|")[-1]
     planned_departure = train.departure
