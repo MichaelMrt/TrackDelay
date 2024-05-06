@@ -10,10 +10,8 @@ def dataset_is_new():
 
    for result in results:
        if(result[2]==id or result[5]==planned_departure or result[6]==current_departure):
-          print("Already exists")
           return False        
        
-   print("returned true")
    return True
 
 
@@ -68,4 +66,4 @@ for train in trains_with_changes:
      mydb.commit()
 
 mydb.close()
-print("Success")
+print("Success--End of script")
