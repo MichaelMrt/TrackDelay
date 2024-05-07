@@ -93,7 +93,8 @@ class Api_wrapper:
         
         print("End of script "+str(datetime.datetime.now()))
 
-        log_path = os.path.join('logs', 'logs.txt')
-        with open(log_path,'a') as datei:
-            datei.write("End of script "+str(datetime.datetime.now())+"\n")
+        log_path = os.path.join('logs', 'logs.log')
+        with open(log_path,'w') as log_file:
+            log_file.write("End of script "+str(datetime.datetime.now())+"\n")
+        log_file.close()
 
