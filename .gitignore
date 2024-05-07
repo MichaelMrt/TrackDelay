@@ -1,11 +1,3 @@
 /logs
-status.txt
-muenster_status.txt
-duesseldorf_status.txt
-/duesseldorf_logs
-/muenster_logs
-/parquet
-/excel
-/__pycache__
 __pycache__
 config.py
