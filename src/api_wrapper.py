@@ -46,6 +46,7 @@ class Api_wrapper:
         station_helper = deutsche_bahn_api.station_helper.StationHelper()
         found_stations_by_name = station_helper.find_stations_by_name(train_station_name)
         print(found_stations_by_name[0][3]) # Output station
+        train_station_name = found_stations_by_name[0][3]
 
         timetable_helper = deutsche_bahn_api.timetable_helper.TimetableHelper(found_stations_by_name[0], api)
         trains_in_this_hour = timetable_helper.get_timetable()
@@ -84,8 +85,8 @@ class Api_wrapper:
            # self._debug_output(line,train_id,first_station,last_station,planned_departure,current_departure,track,string_message,train_station_name)
             
             if self._dataset_is_new(mycursor, planned_departure, current_departure, train_id):
-                query = "INSERT INTO test VALUES (DEFAULT,'" + line + "','" + train_id + "','" + first_station + "','" + last_station + "','" + planned_departure + "','" + current_departure + "','" + track + "','" + string_message +"','"+train_station_name+"')"
-                print("Dataset inserted")
+                query = "INSERT INTO trains VALUES (DEFAULT,'" + line + "','" + train_id + "','" + first_station + "','" + last_station + "','" + planned_departure + "','" + current_departure + "','" + track + "','" + string_message +"','"+train_station_name+"')"
+                print("Dataset inserted: "+line+" "+train_id)
                 mycursor.execute(query)
                 mydb.commit()
 
