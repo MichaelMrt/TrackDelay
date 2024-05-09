@@ -71,6 +71,8 @@ class Api_wrapper:
             
             if hasattr(train.train_changes, 'departure'):
                 current_departure = train.train_changes.departure
+            else:
+                current_departure = None
             
 
             track = train.platform
@@ -85,9 +87,10 @@ class Api_wrapper:
            # self._debug_output(line,train_id,first_station,last_station,planned_departure,current_departure,track,string_message,train_station_name)
             
             if self._dataset_is_new(mycursor, planned_departure, current_departure, train_id):
-                query = "INSERT INTO trains VALUES (DEFAULT,'" + line + "','" + train_id + "','" + first_station + "','" + last_station + "','" + planned_departure + "','" + current_departure + "','" + track + "','" + string_message +"','"+train_station_name+"')"
+                sql = "INSERT INTO trains VALUES (DEFAULT,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                parameters = (line, train_id, first_station, last_station, planned_departure,current_departure, track, string_message, train_station_name)
                 print("Dataset inserted: "+line+" "+train_id)
-                mycursor.execute(query)
+                mycursor.execute(sql,parameters)
                 mydb.commit()
 
         mydb.close()

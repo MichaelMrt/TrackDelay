@@ -21,8 +21,9 @@ def repeat_task():
        error_log_path = os.path.join('logs','error.log')
        with open(error_log_path,'a') as error_log:
           error_log.write(str(e)+"\n")
+          error_log.close()
 
-    error_log.close()
+    
     scheduler.enter(30, 1, repeat_task)
 
 
