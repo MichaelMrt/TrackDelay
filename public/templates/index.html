@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackDelay - Datenvisualisierung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TrackDelay - Datenvisualisierung</h1>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Anzahl der Züge</h2>
+            <p>Die Anzahl der abgerufenen Züge beträgt derzeit: <strong>{{anzahl_zuege}}</strong>.</p>
+        </div>
+
+        <div class="card">
+            <h2>Verspätungen</h2>
+            <p>Durchschnittliche Verspätung: <strong>{{verspaetung_in_min}} Minuten</strong></p>
+            <p>Medianverspätung: <strong> / </strong></p>
+            <p>Bahnhof mit den meisten Verspätungen: <strong> /</strong></p>
+            <p>Zuglinie mit den meisten Verspätungen: <strong> / </strong></p>
+        </div>
+
+        <div class="card">
+            <h2>Ausfallwahrscheinlichkeit</h2>
+            <p>Die durchschnittliche Ausfallwahrscheinlichkeit beträgt: <strong> / </strong>.</p>
+        </div>
+
+        <div class="chart-container">
+            <!-- Hier können Diagramme eingefügt werden -->
+            <!-- Zum Beispiel mit Chart.js oder D3.js -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 TrackDelay - Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>
