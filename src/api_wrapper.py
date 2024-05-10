@@ -1,10 +1,14 @@
 import deutsche_bahn_api.api_authentication as dba
 import deutsche_bahn_api.station_helper
 import deutsche_bahn_api.timetable_helper
-import config
 import mysql.connector
 import datetime
 import os
+import sys
+
+# jump up one folder to import the config file
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import config
 
 class Api_wrapper:
     
