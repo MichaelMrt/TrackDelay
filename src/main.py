@@ -24,7 +24,6 @@ def repeat_task():
      api_wrapper.start("Ennepetal")
      
     except Exception as e:
-       #error_log_path = os.path.join('/root/TrackDelay/logs/','error.log')
        with open(error_log_path,'a') as error_log:
           error_log.write(str(e)+"\n")
           error_log.close()
