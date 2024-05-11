@@ -13,7 +13,7 @@ import config
 class Api_wrapper:
     
     def _dataset_is_new(self,mycursor, planned_departure, current_departure, train_id):
-        mycursor.execute("SELECT * FROM test")
+        mycursor.execute("SELECT * FROM trains")
         results = mycursor.fetchall()
 
         for result in results:
