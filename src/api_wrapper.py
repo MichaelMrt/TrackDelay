@@ -1,15 +1,25 @@
 import deutsche_bahn_api.api_authentication as dba
 import deutsche_bahn_api.station_helper
 import deutsche_bahn_api.timetable_helper
-import config
 import mysql.connector
 import datetime
 import os
+import sys
+
+# Paths to script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+src_path = os.path.join(script_dir, "..", "src", "main.py")
+log_path = os.path.join(script_dir, "..", "logs","logs.log")
+
+
+# jump up one folder to import the config file
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import config
 
 class Api_wrapper:
     
     def _dataset_is_new(self,mycursor, planned_departure, current_departure, train_id):
-        mycursor.execute("SELECT * FROM test")
+        mycursor.execute("SELECT * FROM trains")
         results = mycursor.fetchall()
 
         for result in results:
@@ -97,7 +107,7 @@ class Api_wrapper:
         
         print("End of script "+str(datetime.datetime.now()))
 
-        log_path = os.path.join('logs', 'logs.log')
+
         with open(log_path,'w') as log_file:
             log_file.write("End of script "+str(datetime.datetime.now())+"\n")
         log_file.close()

@@ -3,7 +3,7 @@ import os
 import mysql.connector
 import sys
 
-# übergeordnetes Verzeichnis
+# jump up one folder to import the config file
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 
