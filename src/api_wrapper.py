@@ -23,7 +23,7 @@ class Api_wrapper:
         results = mycursor.fetchall()
 
         for result in results:
-            if (result[2] == train_id or result[5] == planned_departure or result[6] == current_departure):
+            if (result[2] == train_id and result[5] == planned_departure and result[6] == current_departure):
                 return False
 
         return True
