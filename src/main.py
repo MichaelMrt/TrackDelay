@@ -2,6 +2,7 @@ import sched
 import time
 import api_wrapper
 import os
+import traceback
 
 # Paths to script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,8 +26,8 @@ def repeat_task():
     except Exception as e:
        with open(error_log_path,'a') as error_log:
           print("ERROR")
-          error_log.write(str(e)+"\n")
-          error_log.close()
+          error_log.write("ERROR:\n")
+          traceback.print_exc(file=error_log)
 
     
     scheduler.enter(30, 1, repeat_task)
