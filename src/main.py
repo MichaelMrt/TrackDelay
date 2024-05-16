@@ -6,8 +6,7 @@ import os
 # Paths to script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 src_path = os.path.join(script_dir, "..", "src", "main.py")
-error_log_path = os.path.join(script_dir, "..", "logs")
-
+error_log_path = os.path.join(script_dir, "..","logs", "error.log")
 
 def repeat_task():
     try:
@@ -25,6 +24,7 @@ def repeat_task():
      
     except Exception as e:
        with open(error_log_path,'a') as error_log:
+          print("ERROR")
           error_log.write(str(e)+"\n")
           error_log.close()
 
