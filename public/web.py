@@ -56,6 +56,11 @@ def index():
     mycursor.execute(query)
     results = mycursor.fetchall()
     rb50_anzahl = results[0][0]
+    # Durchschnittliche Verspätung in Minuten RB50
+    query = "SELECT AVG(DISTINCT(TIMESTAMPDIFF(Minute,planned_departure,current_departure))) FROM trains WHERE line='RB50'"
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+    rb50_verspaetung = results[0][0]
     # Ausfallwahrscheinlichkeit RB50
     query = "SELECT ((SELECT COUNT(*) FROM trains WHERE current_departure IS NULL AND line='RB50') /(SELECT COUNT(*) FROM trains WHERE line='RB50'))*100"
     mycursor.execute(query)
@@ -65,7 +70,8 @@ def index():
 
 
     return render_template('index.html',anzahl_zuege=anzahl_zuege,verspaetung_in_min=verspaetung_in_min,
-                           ausfallwahrscheinlichkeit=ausfallwahrscheinlichkeit, bahnhoefe=bahnhoefe,rb50_anzahl=rb50_anzahl,rb50_ausfallwahrscheinlichkeit=rb50_ausfallwahrscheinlichkeit)
+                           ausfallwahrscheinlichkeit=ausfallwahrscheinlichkeit, bahnhoefe=bahnhoefe,
+                           rb50_anzahl=rb50_anzahl,rb50_ausfallwahrscheinlichkeit=rb50_ausfallwahrscheinlichkeit,rb50_verspaetung=rb50_verspaetung)
 
 
 if __name__ == '__main__':
