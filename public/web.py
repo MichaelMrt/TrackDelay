@@ -50,6 +50,16 @@ def index():
     bahnhoefe = re.sub('[(\']',"",bahnhoefe)
     bahnhoefe = re.sub('[)]'," ",bahnhoefe)
 
+    # Bahnhof mit meister Verspätung
+    query ="SELECT AVG(DISTINCT(TIMESTAMPDIFF(Minute,planned_departure,current_departure))) AS delay, train_station FROM trains GROUP BY train_station ORDER BY delay DESC LIMIT 1"
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+    bahnhof_mit_hoechster_durchschnitt_verspaetung = results[0][1]
+    bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten = results[0][0]
+
+    
+    # Zuglinie mit meister Verspätung
+
     # RB50 Daten
     # Anzahl RB50
     query = "SELECT COUNT(*) FROM trains WHERE line ='RB50'"
@@ -71,7 +81,9 @@ def index():
 
     return render_template('index.html',anzahl_zuege=anzahl_zuege,verspaetung_in_min=verspaetung_in_min,
                            ausfallwahrscheinlichkeit=ausfallwahrscheinlichkeit, bahnhoefe=bahnhoefe,
-                           rb50_anzahl=rb50_anzahl,rb50_ausfallwahrscheinlichkeit=rb50_ausfallwahrscheinlichkeit,rb50_verspaetung=rb50_verspaetung)
+                           rb50_anzahl=rb50_anzahl,rb50_ausfallwahrscheinlichkeit=rb50_ausfallwahrscheinlichkeit,rb50_verspaetung=rb50_verspaetung,
+                           bahnhof_mit_hoechster_durchschnitt_verspaetung=bahnhof_mit_hoechster_durchschnitt_verspaetung,
+                           bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten=bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten)
 
 
 if __name__ == '__main__':
