@@ -57,13 +57,18 @@ def index():
     bahnhof_mit_hoechster_durchschnitt_verspaetung = results[0][1]
     bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten = results[0][0]
 
-    
     # Zuglinie mit meister Verspätung
     query ="SELECT AVG(DISTINCT(TIMESTAMPDIFF(Minute,planned_departure,current_departure))) AS delay, line, train_id FROM trains GROUP BY line, train_id ORDER BY delay DESC LIMIT 1"
     mycursor.execute(query)
     results = mycursor.fetchall()
     linie_mit_hoechster_durchschnitt_verspaetung = results[0][1]
     linie_mit_hoechster_durchschnitt_verspaetung_minuten = results[0][0]
+
+    # Höchste Verspätung
+    query ="SELECT DISTINCT(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) AS delay FROM trains ORDER BY delay DESC LIMIT 1"
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+    höchste_verspaetung = results[0][0]
 
     # RB50 Daten
     # Anzahl RB50
@@ -90,7 +95,8 @@ def index():
                            bahnhof_mit_hoechster_durchschnitt_verspaetung=bahnhof_mit_hoechster_durchschnitt_verspaetung,
                            bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten=bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten,
                            linie_mit_hoechster_durchschnitt_verspaetung=linie_mit_hoechster_durchschnitt_verspaetung,
-                           linie_mit_hoechster_durchschnitt_verspaetung_minuten=linie_mit_hoechster_durchschnitt_verspaetung_minuten)
+                           linie_mit_hoechster_durchschnitt_verspaetung_minuten=linie_mit_hoechster_durchschnitt_verspaetung_minuten,
+                           höchste_verspaetung=höchste_verspaetung)
 
 
 if __name__ == '__main__':
