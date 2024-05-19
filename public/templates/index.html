@@ -61,6 +61,7 @@
         <div class="card">
             <h2>Anzahl der Züge</h2>
             <p>Die Anzahl der abgerufenen Züge beträgt derzeit: <strong>{{anzahl_zuege}}</strong>.</p>
+            <p>Betrachtete Bahnhöfe:  <strong>{{bahnhoefe}}</strong></p>
         </div>
 
         <div class="card">
@@ -73,7 +74,13 @@
 
         <div class="card">
             <h2>Ausfallwahrscheinlichkeit</h2>
-            <p>Die durchschnittliche Ausfallwahrscheinlichkeit beträgt: <strong> / </strong>.</p>
+            <p>Die durchschnittliche Ausfallwahrscheinlichkeit beträgt: <strong> {{ausfallwahrscheinlichkeit}} % </strong></p>
+        </div>
+
+        <div class="card">
+            <h2>RB50</h2>
+            <p>Anzahl RB50 Gesamt: <strong> {{rb50_anzahl}} </strong></p>
+            <p>Die durchschnittliche Ausfallwahrscheinlichkeit: <strong> {{rb50_ausfallwahrscheinlichkeit}} % </strong></p>
         </div>
 
         <div class="chart-container">
