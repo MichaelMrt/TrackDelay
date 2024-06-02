@@ -8,19 +8,19 @@ import re
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 
-# Connect to Database
-mydb = mysql.connector.connect(
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    # Connect to Database
+    mydb = mysql.connector.connect(
     host=config.DB_HOSTNAME,
     user=config.DB_USER,
     password=config.DB_PASSWORD,
     database=config.DATABASE
         )
-mycursor = mydb.cursor()
+    mycursor = mydb.cursor()
 
-app = Flask(__name__)
-
-@app.route('/')
-def index():
     # Anzahl Zuege
     query = "SELECT count(*) AS anzahl_zuege FROM trains"
     mycursor.execute(query)
