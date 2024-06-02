@@ -23,7 +23,14 @@ class Api_wrapper:
         results = mycursor.fetchall()
 
         for result in results:
-            if (result[2] == train_id or result[5] == planned_departure or result[6] == current_departure):
+            # Format the String date to a datetime object to compare with database results
+            # Incoming String: 2405162133 -> 16th May 2024 21:33
+            if isinstance(planned_departure, str): # api delivers string or date for some reason
+             planned_departure = datetime.datetime.strptime(planned_departure, '%Y%m%d%H%M') 
+            if isinstance(current_departure, str):
+             current_departure = datetime.datetime.strptime(current_departure, '%Y%m%d%H%M')
+                        
+            if (result[2] == train_id and result[5] == planned_departure and result[6] == current_departure):
                 return False
 
         return True

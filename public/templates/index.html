@@ -61,19 +61,38 @@
         <div class="card">
             <h2>Anzahl der Züge</h2>
             <p>Die Anzahl der abgerufenen Züge beträgt derzeit: <strong>{{anzahl_zuege}}</strong>.</p>
+            <p>Betrachtete Bahnhöfe:  <strong>{{bahnhoefe}}</strong></p>
         </div>
 
         <div class="card">
             <h2>Verspätungen</h2>
             <p>Durchschnittliche Verspätung: <strong>{{verspaetung_in_min}} Minuten</strong></p>
             <p>Medianverspätung: <strong> / </strong></p>
-            <p>Bahnhof mit den meisten Verspätungen: <strong> /</strong></p>
-            <p>Zuglinie mit den meisten Verspätungen: <strong> / </strong></p>
+            <p>Höchste Verspätung: <strong> {{höchste_verspaetung}} Minuten </strong></p>
+            <p>Bahnhof mit den meisten Verspätungen: <strong> {{bahnhof_mit_hoechster_durchschnitt_verspaetung}} </strong> mit durchschnittlich <strong>{{bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten}} Minuten </strong> Verspätung.</strong></p>
+            <p>Zuglinie mit der meisten Verspätungen: <strong> {{linie_mit_hoechster_durchschnitt_verspaetung}} </strong> mit durchschnittlich <strong>{{linie_mit_hoechster_durchschnitt_verspaetung_minuten}} Minuten </strong> Verspätung. </p>
         </div>
 
         <div class="card">
             <h2>Ausfallwahrscheinlichkeit</h2>
-            <p>Die durchschnittliche Ausfallwahrscheinlichkeit beträgt: <strong> / </strong>.</p>
+            <p>Die durchschnittliche Ausfallwahrscheinlichkeit beträgt: <strong> {{ausfallwahrscheinlichkeit}} % </strong></p>
+        </div>
+
+        <div class="card">
+            <h2>Wochenstatistik</h2>
+            <p>Daten folgen</p>
+        </div>
+
+        <div class="card">
+            <h2>Tagestatistik</h2>
+            <p>Daten folgen</p>
+        </div>
+
+        <div class="card">
+            <h2>RB50</h2>
+            <p>Anzahl RB50 Gesamt: <strong> {{rb50_anzahl}} </strong></p>
+            <p>Die durchschnittliche Verspätung: <strong> {{rb50_verspaetung}} Minuten </strong></p>
+            <p>Die durchschnittliche Ausfallwahrscheinlichkeit: <strong> {{rb50_ausfallwahrscheinlichkeit}} % </strong></p>
         </div>
 
         <div class="chart-container">
@@ -84,6 +103,8 @@
 
     <footer>
         <p>&copy; 2024 TrackDelay - Alle Rechte vorbehalten.</p>
+        <p>&copy; GitHub: <a href="https://github.com/MichaelMrt/TrackDelay">https://github.com/MichaelMrt/TrackDelay</a></p>
+
     </footer>
 </body>
 </html>
