@@ -88,16 +88,47 @@ def index():
     results = mycursor.fetchall()
     rb50_ausfallwahrscheinlichkeit = results[0][0]
 
+    # Wochenstatistik
+    # Bahnhof mit meister Verspätung WOCHE
+    query ="SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) AS delay, train_station FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) GROUP BY train_station ORDER BY delay DESC LIMIT 1"
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+    bahnhof_mit_hoechster_durchschnitt_verspaetung_woche = results[0][1]
+    bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten_woche = results[0][0]
 
+    # Zuglinie mit höchster durschnittsverspätung Verspätung WOCHE
+    query ="SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) AS delay, line, train_id FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) GROUP BY line, train_id ORDER BY delay DESC LIMIT 1"
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+    linie_mit_hoechster_durchschnitt_verspaetung_woche = results[0][1]
+    linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche = results[0][0]
 
-    return render_template('index.html',anzahl_zuege=anzahl_zuege,verspaetung_in_min=verspaetung_in_min,
-                           ausfallwahrscheinlichkeit=ausfallwahrscheinlichkeit, bahnhoefe=bahnhoefe,
-                           rb50_anzahl=rb50_anzahl,rb50_ausfallwahrscheinlichkeit=rb50_ausfallwahrscheinlichkeit,rb50_verspaetung=rb50_verspaetung,
+    # Höchste Verspätung WOCHE
+    query ="SELECT TIMESTAMPDIFF(Minute,planned_departure,current_departure) AS delay, line FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) ORDER BY delay DESC LIMIT 1"
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+    hoechste_verspaetung_woche = results[0][0]
+    hoechste_verspaetung_zug_woche = results[0][1]
+
+    return render_template('index.html',
+                           anzahl_zuege=anzahl_zuege,
+                           verspaetung_in_min=verspaetung_in_min,
+                           ausfallwahrscheinlichkeit=ausfallwahrscheinlichkeit, 
+                           bahnhoefe=bahnhoefe,
+                           rb50_anzahl=rb50_anzahl,
+                           rb50_ausfallwahrscheinlichkeit=rb50_ausfallwahrscheinlichkeit,
+                           rb50_verspaetung=rb50_verspaetung,
                            bahnhof_mit_hoechster_durchschnitt_verspaetung=bahnhof_mit_hoechster_durchschnitt_verspaetung,
                            bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten=bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten,
                            linie_mit_hoechster_durchschnitt_verspaetung=linie_mit_hoechster_durchschnitt_verspaetung,
                            linie_mit_hoechster_durchschnitt_verspaetung_minuten=linie_mit_hoechster_durchschnitt_verspaetung_minuten,
-                           hoechste_verspaetung=hoechste_verspaetung,hoechste_verspaetung_zug=hoechste_verspaetung_zug)
+                           hoechste_verspaetung=hoechste_verspaetung,hoechste_verspaetung_zug=hoechste_verspaetung_zug,
+                           bahnhof_mit_hoechster_durchschnitt_verspaetung_woche=bahnhof_mit_hoechster_durchschnitt_verspaetung_woche,
+                           bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten_woche=bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten_woche,
+                           linie_mit_hoechster_durchschnitt_verspaetung_woche=linie_mit_hoechster_durchschnitt_verspaetung_woche,
+                           linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche=linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche,
+                           hoechste_verspaetung_woche=hoechste_verspaetung_woche,
+                           hoechste_verspaetung_zug_woche=hoechste_verspaetung_zug_woche)
 
 
 if __name__ == '__main__':
