@@ -26,14 +26,13 @@ class Api_wrapper:
             # Format the String date to a datetime object to compare with database results
             # Incoming String: 2405162133 -> 16th May 2024 21:33
             if isinstance(planned_departure, str): # api delivers string or date for some reason
-             planned_departure = datetime.datetime.strptime(planned_departure, '%Y%m%d%H%M') 
+             planned_departure = datetime.datetime.strptime(planned_departure, '%y%m%d%H%M') 
             if isinstance(current_departure, str):
-             current_departure = datetime.datetime.strptime(current_departure, '%Y%m%d%H%M')
-                        
-            if (result[2] == train_id and result[5] == planned_departure and result[6] == current_departure):
+             current_departure = datetime.datetime.strptime(current_departure, '%y%m%d%H%M')        
+            if ((str(result[2]) == str(train_id) and str(result[5]) == str(planned_departure) and str(result[6]) == str(current_departure))):
                 return False
-
-        return True
+            
+        return True    
     
     def _debug_output(self,line,train_id,first_station,last_station,planned_departure,current_departure,track,messages,train_station):
         print("trainid: "+train_id)
@@ -62,7 +61,7 @@ class Api_wrapper:
 
         station_helper = deutsche_bahn_api.station_helper.StationHelper()
         found_stations_by_name = station_helper.find_stations_by_name(train_station_name)
-        print(found_stations_by_name[0][3]) # Output station
+
         train_station_name = found_stations_by_name[0][3]
 
         timetable_helper = deutsche_bahn_api.timetable_helper.TimetableHelper(found_stations_by_name[0], api)
@@ -112,10 +111,10 @@ class Api_wrapper:
 
         mydb.close()
         
-        print("End of script "+str(datetime.datetime.now()))
+        print("End of script "+str(datetime.datetime.now())+" "+train_station_name)
 
 
         with open(log_path,'w') as log_file:
-            log_file.write("End of script "+str(datetime.datetime.now())+"\n")
+            log_file.write("End of script "+str(datetime.datetime.now())+" "+train_station_name+"\n") 
         log_file.close()
 
