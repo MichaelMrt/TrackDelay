@@ -87,7 +87,33 @@
 
         <div class="card">
             <h2>Tagestatistik</h2>
-            <p>Daten folgen</p>
+            <p>Die Daten der letzen Tage:</p>
+            <table border="1">
+                <thead>
+                  <tr>
+                    <th>Datum</th>
+                    <th>Anzahl Züge</th>
+                    <th>Durchschnittliche Verspätung</th>
+                    <th>Maximale Verspätung</th>
+                    <th>Ausgefallene Züge</th>
+                    <th>Alle Züge</th>
+                    <th>Ausfallwahrscheinlichkeit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for index in tagesstatistik%}
+                  <tr>
+                    <td>{{ index[0] }}</td>
+                    <td>{{ index[1] }}</td>
+                    <td>{{ index[2] }}</td>
+                    <td>{{ index[3] }}</td>
+                    <td>{{ index[4] }}</td>
+                    <td>{{ index[5] }}</td>
+                    <td>{{ index[6] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
         </div>
 
         <div class="card">

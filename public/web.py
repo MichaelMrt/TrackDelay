@@ -110,6 +110,12 @@ def index():
     hoechste_verspaetung_woche = results[0][0]
     hoechste_verspaetung_zug_woche = results[0][1]
 
+    # Tagesstatistik
+    query ="SELECT * FROM tagesstatistik"
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+    tagesstatistik = results
+
     return render_template('index.html',
                            anzahl_zuege=anzahl_zuege,
                            verspaetung_in_min=verspaetung_in_min,
@@ -128,7 +134,8 @@ def index():
                            linie_mit_hoechster_durchschnitt_verspaetung_woche=linie_mit_hoechster_durchschnitt_verspaetung_woche,
                            linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche=linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche,
                            hoechste_verspaetung_woche=hoechste_verspaetung_woche,
-                           hoechste_verspaetung_zug_woche=hoechste_verspaetung_zug_woche)
+                           hoechste_verspaetung_zug_woche=hoechste_verspaetung_zug_woche,
+                           tagesstatistik=tagesstatistik)
 
 
 if __name__ == '__main__':
