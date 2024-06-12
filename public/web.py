@@ -28,7 +28,7 @@ def index():
     anzahl_zuege = results[0][0]
 
     # Durchschnittliche Verspätung in Minuten
-    query = "SELECT AVG(DISTINCT(TIMESTAMPDIFF(Minute,planned_departure,current_departure))) FROM trains"
+    query = "SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) FROM trains"
     mycursor.execute(query)
     results = mycursor.fetchall()
     verspaetung_in_min = results[0][0]
