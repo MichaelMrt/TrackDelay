@@ -8,6 +8,12 @@ import re
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sql_file_path = os.path.join(current_dir, 'create_tables.sql')
+sql_file = open(sql_file_path,'r')
+sql_code = sql_file.read()
+sql_file.close()
+sql_code = sql_code.split(";")
 app = Flask(__name__)
 
 @app.route('/')
@@ -20,6 +26,9 @@ def index():
     database=config.DATABASE
         )
     mycursor = mydb.cursor()
+    for query in sql_code:
+     mycursor.execute(query)
+     mydb.commit()
 
     # Anzahl Zuege
     query = "SELECT count(*) AS anzahl_zuege FROM trains"
@@ -46,7 +55,7 @@ def index():
     bahnhoefe=""
     for bahnhof in results:
      bahnhoefe += str(bahnhof)
-    # Zeichen entferenn
+    # Zeichen entfernen
     bahnhoefe = re.sub('[(\']',"",bahnhoefe)
     bahnhoefe = re.sub('[)]'," ",bahnhoefe)
 
@@ -77,11 +86,13 @@ def index():
     mycursor.execute(query)
     results = mycursor.fetchall()
     rb50_anzahl = results[0][0]
+
     # Durchschnittliche Verspätung in Minuten RB50
     query = "SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) FROM trains WHERE line='RB50'"
     mycursor.execute(query)
     results = mycursor.fetchall()
     rb50_verspaetung = results[0][0]
+    
     # Ausfallwahrscheinlichkeit RB50
     query = "SELECT ((SELECT COUNT(*) FROM trains WHERE current_departure IS NULL AND line='RB50') /(SELECT COUNT(*) FROM trains WHERE line='RB50'))*100"
     mycursor.execute(query)
