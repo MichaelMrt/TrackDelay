@@ -14,7 +14,7 @@ sql_file = open(sql_file_path,'r')
 sql_code = sql_file.read()
 sql_file.close()
 sql_code = sql_code.split(";")
-log_path = os.path.join(os.path.dirname(current_dir), "logs\logs.log")
+log_path = os.path.join(os.path.dirname(current_dir), "logs", "logs.log")
 
 log_file = open(log_path, "r")
 log_content = log_file.read()
