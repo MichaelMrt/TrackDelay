@@ -14,17 +14,26 @@ sql_file = open(sql_file_path,'r')
 sql_code = sql_file.read()
 sql_file.close()
 sql_code = sql_code.split(";")
+log_path = os.path.join(os.path.dirname(current_dir), "logs\logs.log")
+
+log_file = open(log_path, "r")
+log_content = log_file.read()
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     # Connect to Database
-    mydb = mysql.connector.connect(
-    host=config.DB_HOSTNAME,
-    user=config.DB_USER,
-    password=config.DB_PASSWORD,
-    database=config.DATABASE
-        )
+    try:
+        mydb = mysql.connector.connect(
+        host=config.DB_HOSTNAME,
+        user=config.DB_USER,
+        password=config.DB_PASSWORD,
+        database=config.DATABASE
+            )
+    except Exception as error:
+       return render_template('db_error.html',log_content=log_content)
+
     mycursor = mydb.cursor()
     for query in sql_code:
      mycursor.execute(query)
@@ -127,6 +136,8 @@ def index():
     results = mycursor.fetchall()
     tagesstatistik = results
 
+
+
     return render_template('index.html',
                            anzahl_zuege=anzahl_zuege,
                            verspaetung_in_min=verspaetung_in_min,
@@ -146,7 +157,8 @@ def index():
                            linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche=linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche,
                            hoechste_verspaetung_woche=hoechste_verspaetung_woche,
                            hoechste_verspaetung_zug_woche=hoechste_verspaetung_zug_woche,
-                           tagesstatistik=tagesstatistik)
+                           tagesstatistik=tagesstatistik,
+                           log_content=log_content)
 
 
 if __name__ == '__main__':
