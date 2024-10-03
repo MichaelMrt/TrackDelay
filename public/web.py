@@ -18,6 +18,7 @@ log_path = os.path.join(os.path.dirname(current_dir), "logs", "logs.log")
 
 log_file = open(log_path, "r")
 log_content = log_file.read()
+log_file.close()
 
 app = Flask(__name__)
 
