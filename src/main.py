@@ -7,7 +7,11 @@ import traceback
 # Paths to script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 src_path = os.path.join(script_dir, "..", "src", "main.py")
-error_log_path = os.path.join(script_dir, "..","logs", "error.log")
+log_path = os.path.join(script_dir, "..","logs")
+error_log_path = os.path.join(log_path, "error.log")
+
+if not os.path.exists(log_path):
+   os.makedirs(log_path)
 
 def repeat_task():
     try:
