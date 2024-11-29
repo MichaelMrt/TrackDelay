@@ -108,28 +108,28 @@ def index():
     mycursor.execute(query)
     results = mycursor.fetchall()
     rb50_ausfallwahrscheinlichkeit = results[0][0]
-
+    
     # Wochenstatistik
     # Bahnhof mit meister Verspätung WOCHE
-    query ="SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) AS delay, train_station FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) GROUP BY train_station ORDER BY delay DESC LIMIT 1"
-    mycursor.execute(query)
-    results = mycursor.fetchall()
-    bahnhof_mit_hoechster_durchschnitt_verspaetung_woche = results[0][1]
-    bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten_woche = results[0][0]
+    # query ="SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) AS delay, train_station FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) GROUP BY train_station ORDER BY delay DESC LIMIT 1"
+    # mycursor.execute(query)
+    # results = mycursor.fetchall()
+    bahnhof_mit_hoechster_durchschnitt_verspaetung_woche = "Coming soon"
+    bahnhof_mit_hoechster_durchschnitt_verspaetung_minuten_woche = "Coming soon"
 
-    # Zuglinie mit höchster durschnittsverspätung Verspätung WOCHE
-    query ="SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) AS delay, line, train_id FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) GROUP BY line, train_id ORDER BY delay DESC LIMIT 1"
-    mycursor.execute(query)
-    results = mycursor.fetchall()
-    linie_mit_hoechster_durchschnitt_verspaetung_woche = results[0][1]
-    linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche = results[0][0]
+    # # Zuglinie mit höchster durschnittsverspätung Verspätung WOCHE
+    # query ="SELECT AVG(TIMESTAMPDIFF(Minute,planned_departure,current_departure)) AS delay, line, train_id FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) GROUP BY line, train_id ORDER BY delay DESC LIMIT 1"
+    # mycursor.execute(query)
+    # results = mycursor.fetchall()
+    linie_mit_hoechster_durchschnitt_verspaetung_woche = "Coming soon"
+    linie_mit_hoechster_durchschnitt_verspaetung_minuten_woche = "Coming soon"
 
-    # Höchste Verspätung WOCHE
-    query ="SELECT TIMESTAMPDIFF(Minute,planned_departure,current_departure) AS delay, line FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) ORDER BY delay DESC LIMIT 1"
-    mycursor.execute(query)
-    results = mycursor.fetchall()
-    hoechste_verspaetung_woche = results[0][0]
-    hoechste_verspaetung_zug_woche = results[0][1]
+    # # Höchste Verspätung WOCHE
+    # query ="SELECT TIMESTAMPDIFF(Minute,planned_departure,current_departure) AS delay, line FROM trains WHERE WEEK(CURRENT_DATE)=WEEK(planned_departure) ORDER BY delay DESC LIMIT 1"
+    # mycursor.execute(query)
+    # results = mycursor.fetchall()
+    hoechste_verspaetung_woche = "Coming soon"
+    hoechste_verspaetung_zug_woche = "Coming soon"
 
     # Tagesstatistik
     query ="SELECT * FROM tagesstatistik"
