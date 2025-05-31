@@ -19,7 +19,7 @@ import config
 class Api_wrapper:
     
     def _dataset_is_new(self,mycursor, planned_departure, current_departure, train_id):
-        mycursor.execute("SELECT * FROM trains")
+        mycursor.execute("SELECT * FROM trains ORDER by planned_departure DESC LIMIT 10000")
         results = mycursor.fetchall()
 
         for result in results:
