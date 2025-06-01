@@ -121,7 +121,7 @@ class TrainDelayTracker:
         database_cursor.execute(sql, parameters)
         
     def log(self, train_station):
-        print("End of script "+str(datetime.datetime.now())+" "+train_station)
+        print("Finished tracking station: "+train_station+"  time: "+str(datetime.datetime.now()))
         with open(LOG_PATH,'w') as log_file:
-            log_file.write("End of script "+str(datetime.datetime.now())+" "+train_station+"\n") 
+            log_file.write("Finished tracking station: "+train_station+"  time: "+str(datetime.datetime.now())) 
         log_file.close()
