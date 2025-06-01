@@ -9,7 +9,7 @@ TrainDelay is a Python package for tracking train delays at various stations usi
 - Logs tracking operations and errors
 
 ## Requirements
-1. Get a MySQL Server running on your machine
+1. Get a MySQL Server running on your machine, the database and tables will be created my the module
 2. Register for the Deutsche Bahn API (free)
 - Create a account at: https://developers.deutschebahn.com
 - Create a new application using this url: https://developers.deutschebahn.com/db-api-marketplace/apis/application/new and choose a name that you want
@@ -27,8 +27,9 @@ from train_delay import *
 3. Create an AuthData object and a DatabaseConfig object
 ```python
 auth_data = AuthData(YOUR_CLIENT_ID, YOUR_CLIENT_SECRET)  
-database_config = DatabaseConfig(YOUR_DB_HOSTNAME, YOUR_DB_USER, YOUR_DB_PASSWORD, YOUR_DATABASE)
+database_config = DatabaseConfig(YOUR_DB_HOSTNAME, YOUR_DB_USER, YOUR_DB_PASSWORD, YOUR_DATABASE_NAME)
 ```
+You can choose the YOUR_DATABASE_NAME freely. The module will create the database and necessary table where all trains will be stored.
 
 4. Now you can create a TrainDelayTracker object
 ```python
@@ -39,6 +40,14 @@ train_delay_tracker = TrainDelayTracker(auth_data, database_config)
 ```python
 train_delay_tracker.track_station("Bonn")
 ```
+6. You'll find your trains at YOUR_DATABASE_NAME.trains
+![alt text](docs/db.png)
+
+## Upcoming Features
+- API to easily analyse the stored data
+- Web-UI to visualize and interact with the stored train delay data
+- SQLite support
+- Docker Container which immediatly tracks data after startup
 
 ## Credits  
-[deutsche_bahn_api](https://github.com/Tutorialwork/deutsche_bahn_ap)
+https://github.com/Tutorialwork/deutsche_bahn_api
