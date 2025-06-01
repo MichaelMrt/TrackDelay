@@ -1,53 +1,53 @@
-# TrackDelay
-## Züge über die Deutsche Bahn Api erfassen und die Daten in eine Datenbank laden, um anschließend Auswertungen mit den Daten durchführen zu können wie etwa die durchschnittliche Verspätung.
+# TrainDelay 
 
-## Installation:
-### Python muss auf dem System installiert sein.
+TrainDelay is a Python package for tracking train delays at various stations using the Deutsche Bahn API. It collects real-time train data, processes delay information, and stores it in a MySQL database for further analysis.
 
-## API
-1. Ein Account muss bei den Entwicklern der Deutschen Bahn erstellt werden: https://developers.deutschebahn.com
-2. Eine neue Anwendung muss erstellt werden mit dem Namen eurer wahl: https://developers.deutschebahn.com/db-api-marketplace/apis/application/new 
-3. Sichert eure Client Id und Client secret.
-4. Navigiert zu der Seite mit verfügbaren Api's und wählt die 'Timetables' Api aus: https://developers.deutschebahn.com/db-api-marketplace/apis/product 
-5. Anschließend müsst ihr den roten Abonnieren Knopf drücken und eure Anwendung wählen. 
+## Features
 
-### Abhängigkeiten
-1. Repository clonen
-2. Mit _pip install deutsche_bahn_api_ die benötigte Python Bibliothek installieren.
-3. Mit _pip install mysql-connector_ die Python Bibliothek zur Datenbankverbindung installieren
-4. Erstelle einen Ordner /logs im Repository und darin die Dateien _logs.log_ und _error.log_
-5. Nun muss eine config.py Datei im Repository angelegt werden. Darin werden wir unsere Api Daten als auch Datenbankverbindungsdaten eingeben, damit das Skript diese von selbst auslesen kann.
-Hier ein Muster:
-CLIENT_ID=    "deine_Client_ID"
-CLIENT_SECRET="dein_Client_Secret"
-DB_HOSTNAME = "dein_db_hostname"
-DB_USER = "dein_db_user"
-DB_PASSWORD = "dein_db_passwort"
-DATABASE = "dein_datenbankname"
+- Fetches train timetable and delay data for specified stations
+- Stores train data in a MySQL database
+- Logs tracking operations and errors
 
-6. Erstelle in deiner Datenbank die Tabelle **trains** mit folgenden Spalten.
-![image](https://github.com/MichaelMrt/TrackDelay/assets/116624593/2973109e-3ef1-4210-832b-f3b94435ff5c)
+## Requirements
+1. Get a MySQL Server running on your machine, the database and tables will be created my the module
+2. Register for the Deutsche Bahn API (free)
+- Create a account at: https://developers.deutschebahn.com
+- Create a new application using this url: https://developers.deutschebahn.com/db-api-marketplace/apis/application/new and choose a name that you want
+- After that save you the client id and the client secret. You need it to interact with the api
+- Navigate to all available apis page at: https://developers.deutschebahn.com/db-api-marketplace/apis/product and select the "Timetables" api
+- And click the red subscribe button and select your application
+- Now you are done and can start using the api
 
-7. Nun sollte das Skript ausführbar sein. 
+## Setup
+1. Install train_delay using: `pip install train_delay`
+2. import module 
+```python
+from train_delay import *
+```
+3. Create an AuthData object and a DatabaseConfig object
+```python
+auth_data = AuthData(YOUR_CLIENT_ID, YOUR_CLIENT_SECRET)  
+database_config = DatabaseConfig(YOUR_DB_HOSTNAME, YOUR_DB_USER, YOUR_DB_PASSWORD, YOUR_DATABASE_NAME)
+```
+You can choose the YOUR_DATABASE_NAME freely. The module will create the database and necessary table where all trains will be stored.
 
-## Anpassungen vornehmen:
-In der main.py können in der Methode repeat_task(): die Bahnhöfe angepasst werden. Standartmäßg sind es folgende Bahnhöfe:
-+ api_wrapper.start("Bonn")
-+ api_wrapper.start("Köln")
-+ api_wrapper.start("Münster")
-+ api_wrapper.start("Düsseldorf Hbf")
-+ api_wrapper.start("Duisburg")
-+ api_wrapper.start("Essen")
-+ api_wrapper.start("Wuppertal")
-+ api_wrapper.start("Bochum")
-+ api_wrapper.start("Berlin Hbf")
-+ api_wrapper.start("Lünen")
-+ api_wrapper.start("Ennepetal")
-+ Um sicher zu gehen, dass es sich um den gewünschten Bahnhof handelt, kann in der Datenbank in der Spalte _train_station_ geschaut werden, ob der Bahnhof der richtige ist.
-+ Gibt man etwa api_wrapper.start("Berlin") an, könnte es passieren dass nicht der Hbf sondern ein andere Bahnhof in Berlin erfasst wird. Der Bahnhofsname wird auch zusätzlich vom Skript geprintet.
+4. Now you can create a TrainDelayTracker object
+```python
+train_delay_tracker = TrainDelayTracker(auth_data, database_config)
+```
 
-Sollten Fehler im Skript auftreten, werden diese in logs/error.log vermerkt.
-In logs/logs.log wird die letze Abfrage des Skripts gespeichert: _End of script 2024-05-12 13:54:48.811615_
+5. Track your desired train stations with the track_station() Method
+```python
+train_delay_tracker.track_station("Bonn")
+```
+6. You'll find your trains at YOUR_DATABASE_NAME.trains
+![alt text](docs/db.png)
 
-Skript kann auch auf einer Remote Maschine laufen gelassen werden, damit rund um die Uhr Daten erfasst werden
+## Upcoming Features
+- API to easily analyse the stored data
+- Web-UI to visualize and interact with the stored train delay data
+- SQLite support
+- Docker Container which immediatly tracks data after startup
 
+## Credits  
+https://github.com/Tutorialwork/deutsche_bahn_api
