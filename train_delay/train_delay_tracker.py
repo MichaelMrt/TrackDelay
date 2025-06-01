@@ -27,8 +27,8 @@ class TrainDelayTracker:
             trains_in_this_hour = self.get_trains_in_this_hour(train_station_data)
             self.to_database(trains_in_this_hour)
         except Exception as e:
-            if not os.path.exists(LOG_PATH):
-                os.makedirs(LOG_PATH)
+            if not os.path.exists(os.path.dirname(LOG_PATH)):
+                os.makedirs(os.path.dirname(LOG_PATH))
             with open(ERROR_LOG_PATH,'a') as error_log:
                 print("ERROR")
                 error_log.write("ERROR:\n")
