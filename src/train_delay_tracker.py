@@ -42,8 +42,8 @@ class TrainDelayTracker:
             messages = self.get_train_message(train.train_changes.messages)
             train_station = self.train_station_name
 
-            trainData = train_data.TrainData(line, train_id, first_station, last_station, planned_departure, current_departure, track, messages, train_station)
-            trains_list_prepared.append(trainData)
+            train_info = train_data.train_info(line, train_id, first_station, last_station, planned_departure, current_departure, track, messages, train_station)
+            trains_list_prepared.append(train_info)
         return trains_list_prepared
 
     def get_trainline(self, train):
@@ -77,12 +77,12 @@ class TrainDelayTracker:
          database_connection = mysql.connector.connect(host=config.DB_HOSTNAME, user=config.DB_USER, password=config.DB_PASSWORD, database=config.DATABASE)
          database_cursor = database_connection.cursor()
 
-         for trainData in trains_data_prepared:
-            if self.dataset_is_new(database_cursor, trainData.planned_departure, trainData.current_departure, trainData.train_id):    
-                self.add_to_database(database_cursor, trainData)
+         for train_info in trains_data_prepared:
+            if self.dataset_is_new(database_cursor, train_info.planned_departure, train_info.current_departure, train_info.train_id):    
+                self.add_to_database(database_cursor, train_info)
                 database_connection.commit()
          database_connection.close()
-         self.log(trainData.train_station)
+         self.log(train_info.train_station)
          
     def dataset_is_new(self, mycursor, planned_departure, current_departure, train_id):
         mycursor.execute("SELECT * FROM trains ORDER by planned_departure DESC LIMIT 10000")
@@ -99,12 +99,12 @@ class TrainDelayTracker:
                 return False
         return True    
     
-    def add_to_database(self, database_cursor, trainData):
+    def add_to_database(self, database_cursor, train_info):
         sql = "INSERT INTO trains VALUES (DEFAULT,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        parameters = (trainData.line, trainData.train_id, trainData.first_station, trainData.last_station, 
-                      trainData.planned_departure,trainData.current_departure, trainData.track, 
-                      trainData.message, trainData.train_station)
-        print("Dataset inserted: "+trainData.line+" "+trainData.train_id)
+        parameters = (train_info.line, train_info.train_id, train_info.first_station, train_info.last_station, 
+                      train_info.planned_departure,train_info.current_departure, train_info.track, 
+                      train_info.message, train_info.train_station)
+        print("Dataset inserted: "+train_info.line+" "+train_info.train_id)
         database_cursor.execute(sql, parameters)
         
     def log(self, train_station):
