@@ -1,11 +1,10 @@
 from deutsche_bahn_api import *
-import config
 import train_data
 import mysql.connector
 import datetime 
 import os
 import traceback
-
+from auth_data import AuthData, DatabaseConfig
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_PATH = os.path.join(SCRIPT_DIR, "..", "logs","logs.log")
@@ -13,6 +12,11 @@ ERROR_LOG_PATH = os.path.join(SCRIPT_DIR,"..","logs", "error.log")
 
 
 class TrainDelayTracker:
+
+    def __init__(self, auth_data : AuthData, database_config : DatabaseConfig):
+        self.api_auth = ApiAuthentication(auth_data.client_id, auth_data.client_secret)
+        self.database_connection = mysql.connector.connect(host=database_config.hostname, user=database_config.user, password=database_config.password, database=database_config.database)
+
 
     def track_station(self, train_station_name_userinput):
         try:
@@ -35,8 +39,7 @@ class TrainDelayTracker:
         return station_data
     
     def get_trains_in_this_hour(self, train_station_data):
-        api_auth = ApiAuthentication(config.CLIENT_ID, config.CLIENT_SECRET)
-        timetable_helper = TimetableHelper(train_station_data, api_auth)
+        timetable_helper = TimetableHelper(train_station_data, self.api_auth)
         timetable = timetable_helper.get_timetable()
         trains_in_this_hour = timetable_helper.get_timetable_changes(timetable)
         return trains_in_this_hour
@@ -86,14 +89,12 @@ class TrainDelayTracker:
          
     def to_database(self, trains_list):
          trains_data_prepared = self.prepare_trains_data(trains_list)
-         database_connection = mysql.connector.connect(host=config.DB_HOSTNAME, user=config.DB_USER, password=config.DB_PASSWORD, database=config.DATABASE)
-         database_cursor = database_connection.cursor()
+         database_cursor = self.database_connection.cursor()
 
          for train_info in trains_data_prepared:
             if self.dataset_is_new(database_cursor, train_info.planned_departure, train_info.current_departure, train_info.train_id):    
                 self.add_to_database(database_cursor, train_info)
-                database_connection.commit()
-         database_connection.close()
+                self.database_connection.commit()
          self.log(train_info.train_station)
          
     def dataset_is_new(self, mycursor, planned_departure, current_departure, train_id):
