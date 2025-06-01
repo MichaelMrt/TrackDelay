@@ -2,3 +2,9 @@
 __pycache__
 config.py
 /venv
+/dist
+*.egg-info/
+dist/
+build/
+*.pyc
+
