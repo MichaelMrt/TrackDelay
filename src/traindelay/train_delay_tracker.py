@@ -1,10 +1,10 @@
 from deutsche_bahn_api import *
-import traindelay.train_data as train_data
+import train_data as train_data
 import mysql.connector
 import datetime 
 import os, sys
 import traceback
-from traindelay.auth_data import AuthData, DatabaseConfig
+from auth_data import AuthData, DatabaseConfig
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,7 +28,7 @@ class TrainDelayTracker:
             self.to_database(trains_in_this_hour)
         except Exception as e:
             if not os.path.exists(LOG_PATH):
-                os.makedirs(LOG_PATH)
+                os.makedirs(os.path.dirname(LOG_PATH))
             with open(ERROR_LOG_PATH,'a') as error_log:
                 print("ERROR")
                 error_log.write("ERROR:\n")
