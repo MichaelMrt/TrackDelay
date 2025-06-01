@@ -11,7 +11,7 @@ TrainDelay is a Python package for tracking train delays at various stations usi
 ## Requirements
 1. Get a MySQL Server running on your machine, the database and tables will be created my the module
 2. Register for the Deutsche Bahn API (free)
-- Create a account at: https://developers.deutschebahn.com
+- Create an account at: https://developers.deutschebahn.com
 - Create a new application using this url: https://developers.deutschebahn.com/db-api-marketplace/apis/application/new and choose a name that you want
 - After that save you the client id and the client secret. You need it to interact with the api
 - Navigate to all available apis page at: https://developers.deutschebahn.com/db-api-marketplace/apis/product and select the "Timetables" api
