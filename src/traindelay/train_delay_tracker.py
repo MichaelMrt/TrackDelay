@@ -1,10 +1,10 @@
 from deutsche_bahn_api import *
-import train_data
+import traindelay.train_data as train_data
 import mysql.connector
 import datetime 
 import os, sys
 import traceback
-from auth_data import AuthData, DatabaseConfig
+from traindelay.auth_data import AuthData, DatabaseConfig
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

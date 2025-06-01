@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traindelay"
+version = "1.0.0"
+description = "Easily track trains entering stations using the Deutsche Bahn API and save the data into a database"
+readme = "README.rst"
+authors = [
+  {name = "Michael", email = "michael-development@outlook.de"}
+]
+maintainers = [
+  {name = "Michael", email = "michael-development@outlook.de"}
+]
+classifiers = [
+
+]
+license = {text = "GNU General Public License v3"}
+dependencies = [
+  
+]
+
+[project.optional-dependencies]
+dev = [
+    "coverage",  # testing
+    "mypy",  # linting
+    "pytest",  # testing
+    "ruff"  # linting
+]
+
+[project.urls]
+
+bugs = "https://github.com/MichaelMrt/traindelay/issues"
+changelog = "https://github.com/MichaelMrt/traindelay/blob/master/changelog.md"
+homepage = "https://github.com/MichaelMrt/traindelay"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+"*" = ["*.*"]
+
+
+
+
+# Mypy
+# ----
+
+[tool.mypy]
+files = "."
+
+# Use strict defaults
+strict = true
+warn_unreachable = true
+warn_no_return = true
+
+[[tool.mypy.overrides]]
+# Don't require test functions to include types
+module = "tests.*"
+allow_untyped_defs = true
+disable_error_code = "attr-defined"
+
