@@ -4,17 +4,29 @@ import train_data
 import mysql.connector
 import datetime 
 import os
+import traceback
+
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_PATH = os.path.join(SCRIPT_DIR, "..", "logs","logs.log")
+ERROR_LOG_PATH = os.path.join(SCRIPT_DIR,"..","logs", "error.log")
+
 
 class TrainDelayTracker:
 
-    def track_train_station(self, train_station_name_userinput):
-        train_station_data = self.get_station_data(train_station_name_userinput) 
-        self.train_station_name = train_station_data[3]
-        trains_in_this_hour = self.get_trains_in_this_hour(train_station_data)
-        self.to_database(trains_in_this_hour)
-
+    def track_station(self, train_station_name_userinput):
+        try:
+            train_station_data = self.get_station_data(train_station_name_userinput) 
+            self.train_station_name = train_station_data[3]
+            trains_in_this_hour = self.get_trains_in_this_hour(train_station_data)
+            self.to_database(trains_in_this_hour)
+        except Exception as e:
+            if not os.path.exists(LOG_PATH):
+                os.makedirs(LOG_PATH)
+            with open(ERROR_LOG_PATH,'a') as error_log:
+                print("ERROR")
+                error_log.write("ERROR:\n")
+                traceback.print_exc(file=error_log)
 
     def get_station_data(self, train_station_name):
         station_helper = StationHelper()
@@ -42,7 +54,7 @@ class TrainDelayTracker:
             messages = self.get_train_message(train.train_changes.messages)
             train_station = self.train_station_name
 
-            train_info = train_data.train_info(line, train_id, first_station, last_station, planned_departure, current_departure, track, messages, train_station)
+            train_info = train_data.TrainData(line, train_id, first_station, last_station, planned_departure, current_departure, track, messages, train_station)
             trains_list_prepared.append(train_info)
         return trains_list_prepared
 
