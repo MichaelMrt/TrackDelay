@@ -2,20 +2,22 @@ from deutsche_bahn_api import *
 import train_data
 import mysql.connector
 import datetime 
-import os
+import os, sys
 import traceback
 from auth_data import AuthData, DatabaseConfig
+
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_PATH = os.path.join(SCRIPT_DIR, "..", "logs","logs.log")
 ERROR_LOG_PATH = os.path.join(SCRIPT_DIR,"..","logs", "error.log")
-
+SCHEMA_PATH = os.path.join(SCRIPT_DIR, "db", "schema.sql")
 
 class TrainDelayTracker:
 
     def __init__(self, auth_data : AuthData, database_config : DatabaseConfig):
         self.api_auth = ApiAuthentication(auth_data.client_id, auth_data.client_secret)
-        self.database_connection = mysql.connector.connect(host=database_config.hostname, user=database_config.user, password=database_config.password, database=database_config.database)
+        self.database_connection = mysql.connector.connect(host=database_config.hostname, user=database_config.user, password=database_config.password)
+        self.create_database(database_config.database)
 
 
     def track_station(self, train_station_name_userinput):
@@ -125,3 +127,19 @@ class TrainDelayTracker:
         with open(LOG_PATH,'w') as log_file:
             log_file.write("Finished tracking station: "+train_station+"  time: "+str(datetime.datetime.now())) 
         log_file.close()
+
+    def create_database(self, database_name):
+        statements = self.get_create_statements(database_name)
+        for statement in statements:
+            try:
+                self.database_connection.cursor().execute(statement.strip())
+            except mysql.connector.Error as err:
+                print(f"Error while creating database: {err}")
+                sys.exit(1)
+
+    def get_create_statements(self, database_name):
+        with open(SCHEMA_PATH, 'r') as schema_file:
+            statements = schema_file.read()
+            statements = statements.replace("{database_name}", database_name)
+            statements = statements.split(';')
+            return statements
